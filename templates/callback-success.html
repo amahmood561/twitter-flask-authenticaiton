@@ -6,6 +6,9 @@
 		screen_name }}</a>. We've successfully received your access token and confirmed it by retrieving some basic details
 	on your behalf from the Twitter API. Yay!</p>
 <p>Here is what we pulled from the API on your behalf:</p>
+<h2>twitter token encoded: {{encoded_jwt}}</h2>
+<h2>twitter token decoded: {{decoded_jwt}}</h2>
+
 <ul>
 	<li>You have Tweeted <span class="label label-success">{{ statuses_count }}</span> times.</li>
 	<li>You have <span class="label label-success">{{ followers_count }}</span> followers.</li>
