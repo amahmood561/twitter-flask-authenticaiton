@@ -5,6 +5,7 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import json
+import jwt
 
 app = Flask(__name__)
 
@@ -111,6 +112,10 @@ def callback():
     real_resp, real_content = real_client.request(
         show_user_url + '?user_id=' + user_id, "GET")
 
+    encoded = jwt.encode({'key': real_oauth_token, 'secret': real_oauth_token_secret}, 'secret', algorithm='HS256')
+
+    decodedjwt = jwt.decode(encoded, 'secret', algorithms=['HS256'])
+
     if real_resp['status'] != '200':
         error_message = "Invalid response from Twitter API GET users/show: {status}".format(
             status=real_resp['status'])
@@ -126,7 +131,7 @@ def callback():
     # don't keep this token and secret in memory any longer
     del oauth_store[oauth_token]
 
-    return render_template('callback-success.html', screen_name=screen_name, user_id=user_id, name=name,
+    return render_template('callback-success.html',encoded_jwt=encoded,decoded_jwt=decodedjwt, screen_name=screen_name, user_id=user_id, name=name,
                            friends_count=friends_count, statuses_count=statuses_count, followers_count=followers_count, access_token_url=access_token_url)
 
 
