@@ -6,10 +6,13 @@ import urllib.parse
 import urllib.error
 import json
 import jwt
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 
 app.debug = False
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 request_token_url = 'https://api.twitter.com/oauth/request_token'
 access_token_url = 'https://api.twitter.com/oauth/access_token'
@@ -37,6 +40,7 @@ def hello():
 
 
 @app.route('/start')
+@cross_origin()
 def start():
     # note that the external callback URL must be added to the whitelist on
     # the developer.twitter.com portal, inside the app settings
@@ -63,6 +67,7 @@ def start():
 
 
 @app.route('/callback')
+@cross_origin()
 def callback():
     # Accept the callback params, get the token and call the API to
     # display the logged-in user's name and handle
@@ -127,15 +132,13 @@ def callback():
     statuses_count = response['statuses_count']
     followers_count = response['followers_count']
     name = response['name']
-
     # don't keep this token and secret in memory any longer
     del oauth_store[oauth_token]
-
     return render_template('callback-success.html',encoded_jwt=encoded,decoded_jwt=decodedjwt, screen_name=screen_name, user_id=user_id, name=name,
                            friends_count=friends_count, statuses_count=statuses_count, followers_count=followers_count, access_token_url=access_token_url)
 
-
 @app.errorhandler(500)
+@cross_origin()
 def internal_server_error(e):
     return render_template('error.html', error_message='uncaught exception'), 500
 
