@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, redirect, request, url_for
 import oauth2 as oauth
 import urllib.request
 import urllib.parse
@@ -18,6 +18,7 @@ request_token_url = 'https://api.twitter.com/oauth/request_token'
 access_token_url = 'https://api.twitter.com/oauth/access_token'
 authorize_url = 'https://api.twitter.com/oauth/authorize'
 show_user_url = 'https://api.twitter.com/1.1/users/show.json'
+dashboard_overview = 'https://localhost:3000/#/dashboard/overview'
 
 # Support keys from environment vars (Heroku).
 app.config['APP_CONSUMER_KEY'] = os.getenv(
@@ -211,7 +212,6 @@ def callbackOriginal():
     del oauth_store[oauth_token]
     return render_template('callback-success.html',encoded_jwt=encoded,decoded_jwt=decodedjwt, screen_name=screen_name, user_id=user_id, name=name,
                            friends_count=friends_count, statuses_count=statuses_count, followers_count=followers_count, access_token_url=access_token_url)
-
 @app.errorhandler(500)
 @cross_origin()
 def internal_server_error(e):
