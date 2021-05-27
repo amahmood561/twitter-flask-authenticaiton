@@ -18,7 +18,7 @@ request_token_url = 'https://api.twitter.com/oauth/request_token'
 access_token_url = 'https://api.twitter.com/oauth/access_token'
 authorize_url = 'https://api.twitter.com/oauth/authorize'
 show_user_url = 'https://api.twitter.com/1.1/users/show.json'
-dashboard_overview = 'https://localhost:3000/#/dashboard/overview'
+dashboard_overview = 'http://localhost:3000/#/dashboard/overview'
 
 # Support keys from environment vars (Heroku).
 app.config['APP_CONSUMER_KEY'] = os.getenv(
@@ -137,7 +137,9 @@ def callback():
     del oauth_store[oauth_token]
     #response = redirect(url_for(dashboard_overview))
     #response.headers['X-JWT-TOKEN'] = encoded
-    return  redirect('http://www.localhost.com:3000/#/dashboard/overview', code=200)
+    response = redirect(dashboard_overview)
+    response.headers['X-JWT-TOKEN'] = encoded
+    return response #redirect('http://localhost:3000/#/dashboard/overview')
 
     #return render_template('callback-success.html',encoded_jwt=encoded,decoded_jwt=decodedjwt, screen_name=screen_name, user_id=user_id, name=name,
                            #friends_count=friends_count, statuses_count=statuses_count, followers_count=followers_count, access_token_url=access_token_url)
