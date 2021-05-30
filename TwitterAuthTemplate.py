@@ -112,13 +112,30 @@ def callback():
     real_oauth_token_secret = access_token[b'oauth_token_secret'].decode(
         'utf-8')
 
+    # Call api.twitter.com/1.1/users/show.json?user_id={user_id}
+    #real_token = oauth.Token(real_oauth_token, real_oauth_token_secret)
+    #real_client = oauth.Client(consumer, real_token)
+    #real_resp, real_content = real_client.request(
+        #show_user_url + '?user_id=' + user_id, "GET")
+
     encoded = jwt.encode({'key': real_oauth_token, 'secret': real_oauth_token_secret}, 'secret', algorithm='HS256')
 
     decodedjwt = jwt.decode(encoded, 'secret', algorithms=['HS256'])
 
-    response = redirect(dashboard_overview)
-    response.headers['X-JWT-TOKEN'] = encoded
-    return response
+    #if real_resp['status'] != '200':
+    #    error_message = "Invalid response from Twitter API GET users/show: {status}".format(
+    #        status=real_resp['status'])
+    #    return render_template('error.html', error_message=error_message)
+
+    # response = json.loads(real_content.decode('utf-8'))
+
+
+    #response = redirect(url_for(dashboard_overview))
+    #response.headers['X-JWT-TOKEN'] = encoded
+    #response = redirect(dashboard_overview+'/?token='+ encoded ,code=200)
+    #response.headers['Access-Control-Allow-Origin'] = '*'
+    #response.headers['X-JWT-TOKEN'] = encoded
+    return redirect(dashboard_overview+'?token=' + encoded)
 
 
 @app.route('/GetDashBoardInfoApi')
