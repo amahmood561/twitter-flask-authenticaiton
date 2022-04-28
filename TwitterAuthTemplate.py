@@ -181,7 +181,7 @@ def getUserTweets(token, id):
         'Authorization': 'Bearer ' + token,
         'Cookie': 'guest_id=v1%3A162137747958631578; guest_id_ads=v1%3A162137747958631578; guest_id_marketing=v1%3A162137747958631578; personalization_id="v1_lg8zB7oNfzevckwqkebfYw=="'
     }
-    conn.request("GET", "/2/users/" + id + "/tweets", payload, headers)
+    conn.request("GET", "/2/users/" + id + "/tweets?&tweet.fields=created_at,public_metrics,referenced_tweets,source,withheld", payload, headers)
     res = conn.getresponse()
     data = res.read()
     frmted = json.loads(data.decode("utf-8"))
